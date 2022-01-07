@@ -6,7 +6,7 @@ import { HomePage } from "../../page-objects/demo-home.page";
 describe('Demo Course - Search for a Course', () => {
     const home = new HomePage();
 
-    it('Should navigate to the demo page', () => {
+    it.skip('Should navigate to the demo page', () => {
         //Act
         home.visit();
 
@@ -15,7 +15,7 @@ describe('Demo Course - Search for a Course', () => {
         cy.contains('Test your Selenium / QTP Scripts').should('be.visible');
     });
 
-    it('List all action name', () => {
+    it.skip('List all action name', () => {
 
         //TODO: Move to a custom command or method within the page object
         let category:string[] = [];
@@ -50,26 +50,25 @@ describe('Demo Course - Search for a Course', () => {
     });
 
 
-    it('Navigate to the Submit Button Clicked link', () => {
-        //Act
-
-        //Get the link
+    it.skip('Navigate to the Submit Button Clicked link', () => {
+        //Arrange: Get the link
         //TODO: Create a function to fetch the link "Submit Button Clicked"
         const link = 'http://www.qa.way2automation.com/';
 
-        //Visit the link
+        //Act: Visit the link
         cy.visit(link);
 
         //Assert
+        //TODO: Check other forms of text matchers
         cy.url().should('include', 'way2auto_jquery');
         home.registrationForm.find('h3')
                             .contains('Dummy Registration Form')
                             .should('be.visible');
     });
-    
 
-    it('Fill out the registration form', () => {
-        //TODO: Add custom command for filling up the form
+
+    it.skip('Fill out the registration form', () => {
+        //TODO: Add custom command for filling up the form or a custom method within page object.
         //Arrange
         cy.fixture('registration').then(data =>{
             home.nameTxtbox.type(data.name);
@@ -77,27 +76,56 @@ describe('Demo Course - Search for a Course', () => {
             home.emailTxtbox.type(data.email);
             home.cityTxtbox.type(data.city);
             home.usernameTxtbox.type(data.username);
-            home.passwordTxtbox.type(data.password)
+            home.passwordTxtbox.type(data.password);
         })
         
         //Act
         home.submitBtn.click();
 
         //Assert
+        //TODO: Check other forms of text matchers
         home.alert.should('have.text', 
                     'This is just a dummy form, you just clicked SUBMIT BUTTON');
     });
 
-    it('Go to EXPLORE LIFETIME MEMBERSHIP', () => {
-        
+    it.skip('Go to EXPLORE LIFETIME MEMBERSHIP', () => {
+        //Act
+        home.exploreLifetimeMembershipLink.click();
+
+        //Assert
+        cy.url().should('include', 'lifetime-membership-club');
     });
 
-    it('Scroll to 20+ Courses video library FREE ACCESS', () => {
-        
+    //TODO: Make the it block text a data file
+    it.skip('Scroll to 20+ Courses video library FREE ACCESS', () => {
+        //Assert
+        home.coursesHeader.should('be.visible')
+                          .scrollIntoView({ easing: 'linear', duration: 1000 }) //TODO: Do we need duration?
+                          .should('have.text', '20+ Courses video library FREE ACCESS');
+
+        cy.pause();
     });
 
-    it('Navigate to Automation Architect Selenium with 7 live projects', () => {
-        
+    //TODO: Make the it block text a data file
+    it('Slide Carousel to view Automation Architect Selenium with 7 live projects', () => {
+
+        cy.visit("https://www.way2automation.com/lifetime-membership-club/");
+
+        //Arrange: Scroll to carousel section
+        home.carouselSection.should('be.visible')
+                            .scrollIntoView({ easing: 'linear', duration: 1000 }) //TODO: Do we need duration?
+                            .click() //Need to click to trigger the carousel slide animation.
+
+
+        const courseText = "Automation Architect Selenium with 7 live projects";
+        home.slideCourseIntoView(courseText);
+
+
+        //Act
+        home.getStartedBtn.click();
+
+        //Assert
+        cy.url().should('eq', 'https://www.selenium-tutorial.com/p/automation-architect-in-selenium-7-live-projects');
     });
 
     it('Click Get Started', () => {

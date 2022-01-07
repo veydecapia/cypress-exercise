@@ -104,5 +104,37 @@ export class HomePage{
             }
         })
     }
-    
+
+
+    //TODO: Create a promise to wait for all the fetching
+    getActionName(){
+        let category:string[] = [];
+        let actions:string[] = [];
+
+        //Get all action name and store to json
+        cy.get('.linkbox').each(($category) => {
+
+            //Get category name
+            const text = $category.find('.heading').text();
+            cy.log("Category: " + text);
+            category.push(text);
+
+            //Get each action name and push to the related category
+            cy.wrap($category).find('ul li h2').each(($action) => {
+                const text = $action.text();
+                cy.log("Action: " + text);
+
+                actions.push(text);
+            }).then(() => {
+                category[text] = actions;
+                actions = [];
+            })
+
+        }).then(() =>{
+            console.log(category);
+
+            //!Only writes the category not the whole json object
+            cy.writeFile('cypress/fixtures/actionsName.json', category);
+        }) 
+    }
 }

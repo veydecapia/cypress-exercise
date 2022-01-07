@@ -62,12 +62,30 @@ describe('Demo Course - Search for a Course', () => {
 
         //Assert
         cy.url().should('include', 'way2auto_jquery');
-        home.registrationForm.contains('Dummy Registration Form').should('be.visible');
+        home.registrationForm.find('h3')
+                            .contains('Dummy Registration Form')
+                            .should('be.visible');
     });
+    
 
     it('Fill out the registration form', () => {
         //TODO: Add custom command for filling up the form
+        //Arrange
+        cy.fixture('registration').then(data =>{
+            home.nameTxtbox.type(data.name);
+            home.phoneTxtbox.type(data.phone);
+            home.emailTxtbox.type(data.email);
+            home.cityTxtbox.type(data.city);
+            home.usernameTxtbox.type(data.username);
+            home.passwordTxtbox.type(data.password)
+        })
         
+        //Act
+        home.submitBtn.click();
+
+        //Assert
+        home.alert.should('have.text', 
+                    'This is just a dummy form, you just clicked SUBMIT BUTTON');
     });
 
     it('Go to EXPLORE LIFETIME MEMBERSHIP', () => {

@@ -4,6 +4,7 @@ import { CoursePage } from "../../page-objects/course.page";
 
 describe('Demo Course - Search for a Course', () => {
     const home = new HomePage();
+    const course = new CoursePage();
     const testdata = 'search-course';
 
 
@@ -22,7 +23,7 @@ describe('Demo Course - Search for a Course', () => {
 
     it('List action name', () => {
         //Act
-        home.getActionName();
+        home.getActionNames();
 
         //TODO: Assert: Verify the length of the json
         //cy.
@@ -66,7 +67,6 @@ describe('Demo Course - Search for a Course', () => {
         cy.fixture(testdata).then(data => {
             home.alert.should('have.text', data.alertText);
         })
-        
     });
 
     it('Navigate to Membership', () => {
@@ -96,8 +96,14 @@ describe('Demo Course - Search for a Course', () => {
         //Arrange: Scroll to carousel section
         home.carouselSection.should('be.visible')
                             .scrollIntoView()
-                            .click(); //Need to click to trigger the carousel slide animation
-        //Act
+                            .click(); 
+                            /** 
+                             * Need to click to trigger
+                             * the carousel slide animation
+                             **/
+        
+        
+                            //Act
         cy.fixture(testdata).then(data => {
             const text = data.courseText;
             home.slideCourseIntoView(text);
@@ -113,7 +119,7 @@ describe('Demo Course - Search for a Course', () => {
     });
 
     it('Search for the topic', () => {
-        const course = new CoursePage();
+        
 
         //Arrange
         course.expandButton.click();
@@ -127,12 +133,51 @@ describe('Demo Course - Search for a Course', () => {
                 .scrollIntoView()
                 .contains('Start')
                 .click();
-                
+
             //Assert
             course.heading.should('include.text', topic);
         })
+    });
 
+    it('Go Back to previous page', () => {
+        //Act
+        cy.go('back');
+
+        //Assert
+        cy.fixture(testdata).then(data =>{
+            const url = data.courseURL;
+            cy.url().should('eq', url);
+        })
+
+    });
+
+    it.only('Payment', () => {
+        cy.visit("https://www.selenium-tutorial.com/p/automation-architect-in-selenium-7-live-projects");
         
+        //Act
+        cy.contains('Pay in British Pounds').click();
+        
+        //Assert
+        course.activeProductPrice.should('have.text', '£15');
+
+    });
+
+    it.only('Enroll in Course', () => {
+        //Act
+        course.enrollBtn
+                    .should('contain.text', 'Enroll in Course')
+                    .click()
+                    .should('have.text', 'Processing...')
+
+        //Assert
+        cy.url().should('contain', 'checkout');
+        cy.contains('Order Summary').should('be.visible');
+    });
+
+
+    it('Checkout', () => {
+        //For each of the input table do focus and blur then check for role=alert visiblity
+        //Use tab to test & check if input except for type=checkbox
     });
 
 

@@ -12,4 +12,12 @@ export class CoursePage{
         return cy.get('#lecture_heading');
     }
 
+    get activeProductPrice(){
+        return cy.get('.active .product-price span').first();
+    }
+
+    get enrollBtn(){
+        return cy.get('#enroll-button');
+    }
+
 }

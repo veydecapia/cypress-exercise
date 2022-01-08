@@ -106,7 +106,7 @@ export class HomePage{
 
 
     //TODO: Create a promise to wait for all the fetching
-    getActionName(){
+    getActionNames(){
         let category = {};
         let actions = [];
 
@@ -133,7 +133,6 @@ export class HomePage{
             cy.writeFile('cypress/fixtures/actions.json', category);
         }) 
     }
-
 
 
 

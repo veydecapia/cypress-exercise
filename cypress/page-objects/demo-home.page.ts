@@ -2,10 +2,8 @@
 
 export class HomePage{
     visit(){
-        //TODO: Move to a config file or json file.
-        cy.visit('https://www.way2automation.com/demo.html#');
+        cy.visit('/demo.html#');
     }
-
 
     //Registration Form
 
@@ -49,11 +47,11 @@ export class HomePage{
 
     //Links
 
-    get exploreLifetimeMembershipLink(){
-        //TODO: Can we create a method passing the text? Seems to be a better solution
-        return this.registrationForm.contains("EXPLORE LIFETIME MEMBERSHIP");
+    getElement(
+        text: string
+    ){
+        return this.registrationForm.contains(text);
     }
-
 
     //Headers
 
@@ -68,7 +66,7 @@ export class HomePage{
         return cy.get('.swiper-container-wrap.pp-info-box-carousel-wrap');
     }
 
-    //Determines the active box
+    //Determines the active slide box
     get activeSlide(){
         return this.carouselSection.find('.swiper-slide.swiper-slide-active');
     }
@@ -88,10 +86,11 @@ export class HomePage{
 
 
     /**
-     * Method to slide the carousel until the desired course is in view
+     * @description Method to slide the carousel until the desired course is in view
      * Clicks next slide button - arrow button (>) until the 
      * desired course is in view.
-     * @param string courseText Course to be viewed
+     * 
+     * @param {string} courseText Exact course text to be viewed
      */
     slideCourseIntoView(
         courseText: string
@@ -108,16 +107,14 @@ export class HomePage{
 
     //TODO: Create a promise to wait for all the fetching
     getActionName(){
-        let category:string[] = [];
-        let actions:string[] = [];
+        let category = {};
+        let actions = [];
 
         //Get all action name and store to json
         cy.get('.linkbox').each(($category) => {
-
             //Get category name
             const text = $category.find('.heading').text();
             cy.log("Category: " + text);
-            category.push(text);
 
             //Get each action name and push to the related category
             cy.wrap($category).find('ul li h2').each(($action) => {
@@ -133,8 +130,11 @@ export class HomePage{
         }).then(() =>{
             console.log(category);
 
-            //!Only writes the category not the whole json object
-            cy.writeFile('cypress/fixtures/actionsName.json', category);
+            cy.writeFile('cypress/fixtures/actions.json', category);
         }) 
     }
+
+
+
+
 }

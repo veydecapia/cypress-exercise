@@ -4,36 +4,51 @@ import { CoursePage } from "../../page-objects/course.page";
 
 describe('Demo Course - Search for a Course', () => {
     const home = new HomePage();
+    const testdata = 'search-course';
 
-    it.skip('Should navigate to the demo page', () => {
+
+    before(() => {
+        //TODO:Delete the actions.json file if exists
+    });
+
+    it('Should navigate to the demo page', () => {
         //Act
         home.visit();
 
         //Assert
-        cy.url().should('include', 'demo.html')
+        cy.url().should('include', 'demo.html');
         cy.contains('Test your Selenium / QTP Scripts').should('be.visible');
     });
 
-
-    it.skip('Navigate to the Submit Button Clicked link', () => {
+    it('List action name', () => {
+        //Act
         home.getActionName();
 
-        //Arrange: Get the link
-        //TODO: Create a function to fetch the link "Submit Button Clicked"
-        const link = 'http://www.qa.way2automation.com/';
+        //TODO: Assert: Verify the length of the json
+        //cy.
+    });
 
-        //Act: Visit the link
-        cy.visit(link);
+
+    it('Navigate to the Submit Button Clicked link', () => {
+        //Arrange: Retrieve and visit the link
+        cy.contains('Submit Button Clicked')
+                        .invoke('attr', 'href')
+                        .then(href => {
+                            cy.log(href);
+
+                            //Act: Visit the link
+                            cy.visit(href);
+                        });
 
         //Assert
-        cy.url().should('include.text', 'way2auto_jquery');
+        cy.url().should('include', 'way2auto_jquery');
         home.registrationForm.find('h3')
                             .contains('Dummy Registration Form')
                             .should('be.visible');
     });
 
 
-    it.skip('Fill out the registration form', () => {
+    it('Fill out the registration form', () => {
         //Arrange
         cy.fixture('registration').then(data =>{
             home.nameTxtbox.type(data.name);
@@ -48,63 +63,76 @@ describe('Demo Course - Search for a Course', () => {
         home.submitBtn.click();
 
         //Assert
-        home.alert.should('have.text', 
-                    'This is just a dummy form, you just clicked SUBMIT BUTTON');
+        cy.fixture(testdata).then(data => {
+            home.alert.should('have.text', data.alertText);
+        })
+        
     });
 
-    //TODO: Make the it block text a data file
-    it.skip('Go to EXPLORE LIFETIME MEMBERSHIP', () => {
+    it('Navigate to Membership', () => {
         //Act
-        home.exploreLifetimeMembershipLink.click();
+        cy.fixture(testdata).then(data => {
+            const text = data.membershipText;
+            home.getElement(text).click();
+        })
 
         //Assert
         cy.url().should('include', 'lifetime-membership-club');
     });
 
-    //TODO: Make the it block text a data file
-    it.skip('Scroll to 20+ Courses video library FREE ACCESS', () => {
-        //Assert
-        home.coursesHeader.should('be.visible')
-                          .scrollIntoView({ easing: 'linear', duration: 1000 }) //TODO: Do we need duration?
-                          .should('have.text', '20+ Courses video library FREE ACCESS');
+    it('Scroll to a Heading section', () => {
+        cy.fixture(testdata).then(data => {
+            const text = data.headerText;
 
-        cy.pause();
+            //Assert
+            home.coursesHeader.should('be.visible')
+                            .scrollIntoView()
+                            .should('have.text', text);
+        })
+
     });
 
-    //TODO: Make the it block text a data file
-    it.skip('Slide Carousel to view Automation Architect Selenium with 7 live projects', () => {
+    it('Slide Carousel to view Course', () => {
         //Arrange: Scroll to carousel section
         home.carouselSection.should('be.visible')
-                            .scrollIntoView({ easing: 'linear', duration: 1000 }) //TODO: Do we need duration?
-                            .click() //Need to click to trigger the carousel slide animation.
-
-
-        const courseText = "Automation Architect Selenium with 7 live projects";
-        home.slideCourseIntoView(courseText);
-
-
+                            .scrollIntoView()
+                            .click(); //Need to click to trigger the carousel slide animation
         //Act
+        cy.fixture(testdata).then(data => {
+            const text = data.courseText;
+            home.slideCourseIntoView(text);
+        })
         home.getStartedBtn.click();
 
         //Assert
-        cy.url().should('eq', 'https://www.selenium-tutorial.com/p/automation-architect-in-selenium-7-live-projects');
+        cy.fixture(testdata).then(data => {
+            const url = data.courseURL;
+            cy.url().should('eq', url);
+        })
+        
     });
 
-    it.skip('Search for the course CucumberParallelWithPageObjects - Project Code', () => {
+    it('Search for the topic', () => {
         const course = new CoursePage();
 
         //Arrange
         course.expandButton.click();
 
-        //Act
-        cy.contains('CucumberParallelWithPageObjects - Project Code')
+        cy.fixture(testdata).then(data =>{
+            const topic = data.topicText;
+
+            //Act
+            cy.contains(topic)
                 .should('be.visible')    
                 .scrollIntoView()
                 .contains('Start')
                 .click();
+                
+            //Assert
+            course.heading.should('include.text', topic);
+        })
 
-        //Assert
-        course.heading.should('include.text', 'CucumberParallelWithPageObjects - Project Code')
+        
     });
 
 

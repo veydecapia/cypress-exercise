@@ -5,7 +5,7 @@
 ## About The Project
 
 Project contains Automated Test written in TypeScript/JavaScript using [Cypress](https://www.cypress.io/) as an open source automation testing framework.
-My task is to automate testing of [way2automation site](https://www.way2automation.com/demo.html#), covering some of the use cases.
+My task is to automate testing of [way2automation site](https://www.way2automation.com/demo.html#), covering some of the scenarios with the steps provided.
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -95,7 +95,7 @@ Note: to download the latest version of npm, on the command line, run the follow
    ![checkout-page](https://user-images.githubusercontent.com/6094567/148682455-5a6a86a8-1d34-4bbb-8a2d-c10e54f29b1c.png)
 
 
-## Test Cases
+## Steps/Test Cases
 
 Automation exercise using Cypress which covers the below provided steps.
 

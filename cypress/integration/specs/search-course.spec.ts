@@ -9,10 +9,6 @@ describe('Demo Course - Search and Enroll for a Course', () => {
     const testdata = 'search-course';
 
 
-    before(() => {
-        //TODO:Delete the actions.json file if exists
-    });
-
     it('Should navigate to the demo page', () => {
         //Act
         home.visit();
@@ -24,11 +20,18 @@ describe('Demo Course - Search and Enroll for a Course', () => {
     });
 
     it('List action name', () => {
-        //Act
-        home.listActionNames("actions");
+        const fileName = 'actions';
 
-        //TODO: Assert: Verify the length of the json
-        //cy.
+        //Act
+        home.listActionNames(fileName);
+
+        //Assert the length of the json
+        cy.readFile(`cypress/fixtures/${fileName}.json`)
+                    .then(data => {
+                        const size = Object.keys(data).length;
+
+                        expect(size).to.eq(6)
+                    })
     });
 
     it('Navigate to the link', () => {

@@ -63,17 +63,20 @@ export class HomePage{
     //Carousel
 
     get carouselSection(){
-        return cy.get('.swiper-container-wrap.pp-info-box-carousel-wrap');
+        return cy.get(
+            '.swiper-container-wrap.pp-info-box-carousel-wrap');
     }
 
     //Determines the active slide box
     get activeSlide(){
-        return this.carouselSection.find('.swiper-slide.swiper-slide-active');
+        return this.carouselSection
+                .find('.swiper-slide.swiper-slide-active');
     }
 
     //Gets the text of the active box
     get slideBoxTitleTxt(){
-        return this.activeSlide.find('.pp-info-box-title');
+        return this.activeSlide
+                .find('.pp-info-box-title');
     }
 
     get getStartedBtn(){
@@ -86,7 +89,8 @@ export class HomePage{
 
 
     /**
-     * @description Method to slide the carousel until the desired course is in view
+     * @description 
+     * Method to slide the carousel until the desired course is in view
      * Clicks next slide button - arrow button (>) until the 
      * desired course is in view.
      * 
@@ -106,7 +110,7 @@ export class HomePage{
 
 
     //TODO: Create a promise to wait for all the fetching
-    getActionNames(){
+    listActionNames(){
         let category = {};
         let actions = [];
 
@@ -133,7 +137,5 @@ export class HomePage{
             cy.writeFile('cypress/fixtures/actions.json', category);
         }) 
     }
-
-
 
 }

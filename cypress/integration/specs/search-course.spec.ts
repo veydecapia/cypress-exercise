@@ -1,8 +1,9 @@
 import { HomePage } from "../../page-objects/demo-home.page";
 import { CoursePage } from "../../page-objects/course.page";
+import { CheckoutPage } from "../../page-objects/checkout.page";
 
 
-describe('Demo Course - Search for a Course', () => {
+describe('Demo Course - Search and Enroll for a Course', () => {
     const home = new HomePage();
     const course = new CoursePage();
     const testdata = 'search-course';
@@ -18,40 +19,39 @@ describe('Demo Course - Search for a Course', () => {
 
         //Assert
         cy.url().should('include', 'demo.html');
-        cy.contains('Test your Selenium / QTP Scripts').should('be.visible');
+        cy.contains('Test your Selenium / QTP Scripts')
+                .should('be.visible');
     });
 
     it('List action name', () => {
         //Act
-        home.getActionNames();
+        home.listActionNames();
 
         //TODO: Assert: Verify the length of the json
         //cy.
     });
 
-
-    it('Navigate to the Submit Button Clicked link', () => {
+    it('Navigate to the link', () => {
         //Arrange: Retrieve and visit the link
         cy.contains('Submit Button Clicked')
-                        .invoke('attr', 'href')
-                        .then(href => {
-                            cy.log(href);
+            .invoke('attr', 'href')
+            .then(href => {
+                cy.log(href);
 
-                            //Act: Visit the link
-                            cy.visit(href);
-                        });
+                //Act: Visit the link
+                cy.visit(href);
+            });
 
         //Assert
         cy.url().should('include', 'way2auto_jquery');
         home.registrationForm.find('h3')
-                            .contains('Dummy Registration Form')
-                            .should('be.visible');
+            .contains('Dummy Registration Form')
+            .should('be.visible');
     });
-
 
     it('Fill out the registration form', () => {
         //Arrange
-        cy.fixture('registration').then(data =>{
+        cy.fixture('registration').then(data => {
             home.nameTxtbox.type(data.name);
             home.phoneTxtbox.type(data.phone);
             home.emailTxtbox.type(data.email);
@@ -59,7 +59,7 @@ describe('Demo Course - Search for a Course', () => {
             home.usernameTxtbox.type(data.username);
             home.passwordTxtbox.type(data.password);
         })
-        
+
         //Act
         home.submitBtn.click();
 
@@ -77,7 +77,8 @@ describe('Demo Course - Search for a Course', () => {
         })
 
         //Assert
-        cy.url().should('include', 'lifetime-membership-club');
+        cy.url().should('include', 
+                'lifetime-membership-club');
     });
 
     it('Scroll to a Heading section', () => {
@@ -85,25 +86,26 @@ describe('Demo Course - Search for a Course', () => {
             const text = data.headerText;
 
             //Assert
-            home.coursesHeader.should('be.visible')
-                            .scrollIntoView()
-                            .should('have.text', text);
+            home.coursesHeader
+                .scrollIntoView()
+                .should('be.visible')
+                .should('have.text', text);
         })
 
     });
 
     it('Slide Carousel to view Course', () => {
         //Arrange: Scroll to carousel section
-        home.carouselSection.should('be.visible')
-                            .scrollIntoView()
-                            .click(); 
-                            /** 
-                             * Need to click to trigger
-                             * the carousel slide animation
-                             **/
-        
-        
-                            //Act
+        home.carouselSection.scrollIntoView()
+                            .click()
+                            .should('be.visible');
+        /** 
+         * Need to click to trigger
+         * the carousel slide animation
+         **/
+
+
+        //Act
         cy.fixture(testdata).then(data => {
             const text = data.courseText;
             home.slideCourseIntoView(text);
@@ -115,23 +117,21 @@ describe('Demo Course - Search for a Course', () => {
             const url = data.courseURL;
             cy.url().should('eq', url);
         })
-        
+
     });
 
     it('Search for the topic', () => {
-        
-
         //Arrange
         course.expandButton.click();
 
-        cy.fixture(testdata).then(data =>{
+        cy.fixture(testdata).then(data => {
             const topic = data.topicText;
 
             //Act
             cy.contains(topic)
-                .should('be.visible')    
                 .scrollIntoView()
                 .contains('Start')
+                .should('be.visible')
                 .click();
 
             //Assert
@@ -140,34 +140,32 @@ describe('Demo Course - Search for a Course', () => {
     });
 
     it('Go Back to previous page', () => {
-        //Act
-        cy.go('back');
+        // cy.go('back'); //Clicking back does not yield to previous page
 
-        //Assert
-        cy.fixture(testdata).then(data =>{
+        cy.fixture(testdata).then(data => {
             const url = data.courseURL;
+            //Act
+            cy.visit(url);
+            //Assert    
             cy.url().should('eq', url);
         })
 
     });
 
-    it.only('Payment', () => {
-        cy.visit("https://www.selenium-tutorial.com/p/automation-architect-in-selenium-7-live-projects");
-        
+    it('Payment', () => {
         //Act
         cy.contains('Pay in British Pounds').click();
-        
+
         //Assert
         course.activeProductPrice.should('have.text', '£15');
-
     });
 
-    it.only('Enroll in Course', () => {
+    it('Enroll in Course', () => {
         //Act
         course.enrollBtn
-                    .should('contain.text', 'Enroll in Course')
-                    .click()
-                    .should('have.text', 'Processing...')
+            .should('contain.text', 'Enroll in Course')
+            .click()
+            .should('have.text', 'Processing...')
 
         //Assert
         cy.url().should('contain', 'checkout');
@@ -175,10 +173,108 @@ describe('Demo Course - Search for a Course', () => {
     });
 
 
-    it('Checkout', () => {
-        //For each of the input table do focus and blur then check for role=alert visiblity
-        //Use tab to test & check if input except for type=checkbox
+    describe('Checkout - verify required error', () => {
+        const checkout = new CheckoutPage();
+
+        it('Email', () => {
+            checkout.emailTxtbox.focus().blur()
+                .parent()
+                .siblings('div')
+                .find('span')
+                .should('have.text', 'Email is required')
+                .and('have.attr', 'role', 'alert');
+        });
+
+        it('Username', () => {
+            checkout.userNameTxtbox.focus().blur()
+                .parent()
+                .siblings('div')
+                .find('span')
+                .should('have.text', 'Name is required')
+                .and('have.attr', 'role', 'alert'); 
+        });
+
+        it('Card Name', () => {
+            checkout.cardNameTxtbox.focus().blur()
+                .parent().parent()
+                .siblings('div')
+                .find('span')
+                .should('have.text', 'required')
+                .and('have.attr', 'role', 'alert');
+        });
+
+        it('Card Number', () => {
+            checkout.cardNumberTxtbox
+                .type('123456789') //Focus is flakey so needed to do type action instead
+                .clear() 
+                .should('be.visible')
+
+            checkout.cardNameTxtbox.focus()   //To mimic blurring
+                .should('be.focused');
+
+            checkout.cardNumberAlert
+                .should('have.text', 'required')
+                .and('have.attr', 'role', 'alert');
+        });
+
+        it('Expiration Date', () => {
+            checkout.expirationDateTxtbox
+                    .should('be.visible')
+                    .type('1234') //Focus is flakey so needed to type action instead
+                    .clear();
+
+            checkout.cardNameTxtbox.focus()   //To mimic blurring
+                    .should('be.focused');
+                    
+            checkout.expirationDateAlert
+                    .should('have.text', 'required')
+                    .and('have.attr', 'role', 'alert');
+            
+        });
+
+
+        it('CVC Code', () => {
+            checkout.cvcCodeTxtbox
+                    .type('123') //Focus is flakey so needed to do type action instead
+                    .clear()
+                    .should('be.visible');
+
+            checkout.cardNameTxtbox.focus()   //To mimic blurring
+                    .should('be.focused');
+                    
+            checkout.cvcCodeAlert
+                    .should('have.text', 'required')
+                    .and('have.attr', 'role', 'alert');
+            
+        });
+
+        it('Street Address', () => {
+            checkout.streetAddressTxtbox.focus().blur()
+                .parent()
+                .siblings('div')
+                .find('span')
+                .should('have.text', 'Street Address required')
+                .and('have.attr', 'role', 'alert');
+        });
+
+        it('City', () => {
+            checkout.cityTxtbox.focus().blur()
+                .parent()
+                .siblings('div')
+                .find('span')
+                .should('have.text', 'City required')
+                .and('have.attr', 'role', 'alert');
+        });
+
+        it('Postal Code', () => {
+            checkout.postalCodeTxtbox.focus().blur()
+                .parent()
+                .siblings('div')
+                .find('span')
+                .should('have.text', "The card's postal code failed validation.")
+                .and('have.attr', 'role', 'alert');
+        });
     });
 
-
+        
 });

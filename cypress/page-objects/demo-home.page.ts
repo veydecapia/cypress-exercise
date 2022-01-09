@@ -102,7 +102,10 @@ export class HomePage{
         this.slideBoxTitleTxt.then(($element) => {
             const text = $element.text().trim();
             if(text !== courseText){
-                this.nextSlideBtn.click();
+                this.nextSlideBtn
+                        .click()
+                        .should('be.visible');
+                        
                 this.slideCourseIntoView(courseText);
             }
         })

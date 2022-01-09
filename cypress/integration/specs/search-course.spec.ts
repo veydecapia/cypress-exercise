@@ -176,6 +176,10 @@ describe('Demo Course - Search and Enroll for a Course', () => {
     describe('Checkout - verify required error', () => {
         const checkout = new CheckoutPage();
 
+        after(() => {
+            cy.screenshot('checkout-page', {capture: 'fullPage'});
+        });
+
         it('Email', () => {
             checkout.emailTxtbox.focus().blur()
                 .parent()

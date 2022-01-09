@@ -2,7 +2,7 @@
   "name": "cypress-exercise",
   "version": "1.0.0",
   "description": "This is automation exercise using Cypress",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

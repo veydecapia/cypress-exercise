@@ -70,7 +70,9 @@ export class HomePage{
     //Determines the active slide box
     get activeSlide(){
         return this.carouselSection
-                .find('.swiper-slide.swiper-slide-active');
+                //Takes time to initiate animation so needed to extend timeout
+                .find('.swiper-slide.swiper-slide-active',
+                             {timeout: 30000});
     }
 
     //Gets the text of the active box

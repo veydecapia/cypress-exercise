@@ -90,41 +90,54 @@ export class HomePage{
 
     /**
      * @description 
-     * Method to slide the carousel until the desired course is in view
+     * Slides the carousel until the desired course is in view
      * Clicks next slide button - arrow button (>) until the 
      * desired course is in view.
      * 
      * @param {string} courseText Exact course text to be viewed
      */
-    slideCourseIntoView(
+    slideCourseIntoView = (
         courseText: string
-    ){
+    ) => {
         this.slideBoxTitleTxt.then(($element) => {
             const text = $element.text().trim();
             if(text !== courseText){
                 this.nextSlideBtn
                         .click()
                         .should('be.visible');
-                        
+
                 this.slideCourseIntoView(courseText);
             }
         })
     }
 
 
-    //TODO: Create a promise to wait for all the fetching
-    listActionNames(){
+    /**
+     * @description
+     * List all the categories and actions names
+     * and store it to a json file under fixtures folder. 
+     * @param {string} fileName filename of the json file
+     */
+    listActionNames = (
+        fileName: string
+    ) => {
         let category = {};
         let actions = [];
 
         //Get all action name and store to json
         cy.get('.linkbox').each(($category) => {
             //Get category name
-            const text = $category.find('.heading').text();
+            const text = $category
+                            .find('.heading')
+                            .text();
             cy.log("Category: " + text);
 
-            //Get each action name and push to the related category
-            cy.wrap($category).find('ul li h2').each(($action) => {
+            //Get each action name and push 
+            //to the related category
+            cy.wrap($category)
+                        .find('ul li h2')
+                        .each(($action) => {
+                
                 const text = $action.text();
                 cy.log("Action: " + text);
 
@@ -137,7 +150,9 @@ export class HomePage{
         }).then(() =>{
             console.log(category);
 
-            cy.writeFile('cypress/fixtures/actions.json', category);
+            cy.writeFile(
+                    `cypress/fixtures/${fileName}.json`
+                    , category);
         }) 
     }
 

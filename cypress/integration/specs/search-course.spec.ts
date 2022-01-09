@@ -25,7 +25,7 @@ describe('Demo Course - Search and Enroll for a Course', () => {
 
     it('List action name', () => {
         //Act
-        home.listActionNames();
+        home.listActionNames("actions");
 
         //TODO: Assert: Verify the length of the json
         //cy.

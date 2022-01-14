@@ -188,7 +188,7 @@ describe('Demo Course - Search and Enroll for a Course', () => {
                 .parent()
                 .siblings('div')
                 .find('span')
-                .should('have.text', 'Email is required')
+                .should('have.text', 'Cannot be blank')
                 .and('have.attr', 'role', 'alert');
         });
 
@@ -197,7 +197,7 @@ describe('Demo Course - Search and Enroll for a Course', () => {
                 .parent()
                 .siblings('div')
                 .find('span')
-                .should('have.text', 'Name is required')
+                .should('have.text', 'Cannot be blank')
                 .and('have.attr', 'role', 'alert'); 
         });
 
@@ -206,21 +206,22 @@ describe('Demo Course - Search and Enroll for a Course', () => {
                 .parent().parent()
                 .siblings('div')
                 .find('span')
-                .should('have.text', 'required')
+                .should('have.text', 'Cannot be blank')
                 .and('have.attr', 'role', 'alert');
         });
 
         it('Card Number', () => {
             checkout.cardNumberTxtbox
-                .type('123456789') //Focus is flakey so needed to do type action instead
-                .clear() 
                 .should('be.visible')
+                .type('123456789') //Focus is flakey so needed to do type action instead
+                .should('be.focused')
+                .clear();
 
             checkout.cardNameTxtbox.focus()   //To mimic blurring
                 .should('be.focused');
 
             checkout.cardNumberAlert
-                .should('have.text', 'required')
+                .should('have.text', 'Cannot be blank')
                 .and('have.attr', 'role', 'alert');
         });
 
@@ -228,31 +229,31 @@ describe('Demo Course - Search and Enroll for a Course', () => {
             checkout.expirationDateTxtbox
                     .should('be.visible')
                     .type('1234') //Focus is flakey so needed to type action instead
+                    .should('be.focused')
                     .clear();
 
             checkout.cardNameTxtbox.focus()   //To mimic blurring
                     .should('be.focused');
                     
             checkout.expirationDateAlert
-                    .should('have.text', 'required')
+                    .should('have.text', 'Cannot be blank')
                     .and('have.attr', 'role', 'alert');
-            
         });
 
 
         it('CVC Code', () => {
             checkout.cvcCodeTxtbox
+                    .should('be.visible')
                     .type('123') //Focus is flakey so needed to do type action instead
-                    .clear()
-                    .should('be.visible');
+                    .should('be.focused')
+                    .clear();
 
             checkout.cardNameTxtbox.focus()   //To mimic blurring
                     .should('be.focused');
                     
             checkout.cvcCodeAlert
-                    .should('have.text', 'required')
+                    .should('have.text', 'Cannot be blank')
                     .and('have.attr', 'role', 'alert');
-            
         });
 
         it('Street Address', () => {
@@ -260,7 +261,7 @@ describe('Demo Course - Search and Enroll for a Course', () => {
                 .parent()
                 .siblings('div')
                 .find('span')
-                .should('have.text', 'Street Address required')
+                .should('have.text', 'Cannot be blank')
                 .and('have.attr', 'role', 'alert');
         });
 
@@ -269,7 +270,7 @@ describe('Demo Course - Search and Enroll for a Course', () => {
                 .parent()
                 .siblings('div')
                 .find('span')
-                .should('have.text', 'City required')
+                .should('have.text', 'Cannot be blank')
                 .and('have.attr', 'role', 'alert');
         });
 
@@ -278,7 +279,7 @@ describe('Demo Course - Search and Enroll for a Course', () => {
                 .parent()
                 .siblings('div')
                 .find('span')
-                .should('have.text', "The card's postal code failed validation.")
+                .should('have.text', "Invalid Postal Code")
                 .and('have.attr', 'role', 'alert');
         });
     });

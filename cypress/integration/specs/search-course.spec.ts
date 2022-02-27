@@ -203,7 +203,7 @@ describe('Demo Course - Search and Enroll for a Course', () => {
 
         it('Card Name', () => {
             checkout.cardNameTxtbox.focus().blur()
-                .parent().parent()
+                .parent()
                 .siblings('div')
                 .find('span')
                 .should('have.text', 'Cannot be blank')
@@ -279,7 +279,7 @@ describe('Demo Course - Search and Enroll for a Course', () => {
                 .parent()
                 .siblings('div')
                 .find('span')
-                .should('have.text', "Invalid Postal Code")
+                .should('have.text', "Cannot be blank")
                 .and('have.attr', 'role', 'alert');
         });
     });

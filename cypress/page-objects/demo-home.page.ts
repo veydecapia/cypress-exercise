@@ -23,6 +23,10 @@ export class HomePage{
         return cy.get("input[name='email']");
     }
 
+    get countryCbobox(){
+        return cy.get("select[name='country']");
+    }
+
     get cityTxtbox(){
         return cy.get("input[name='city']");
     }

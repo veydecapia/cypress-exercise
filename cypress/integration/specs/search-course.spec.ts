@@ -55,12 +55,20 @@ describe('Demo Course - Search and Enroll for a Course', () => {
     it('Fill out the registration form', () => {
         //Arrange
         cy.fixture('registration').then(data => {
-            home.nameTxtbox.type(data.name);
-            home.phoneTxtbox.type(data.phone);
-            home.emailTxtbox.type(data.email);
-            home.cityTxtbox.type(data.city);
-            home.usernameTxtbox.type(data.username);
-            home.passwordTxtbox.type(data.password);
+            home.nameTxtbox.type(data.name).should('have.value', data.name);
+
+            home.phoneTxtbox.type(data.phone).should('have.value', data.phone);
+            
+            home.emailTxtbox.type(data.email).should('have.value', data.email);
+
+            home.countryCbobox.select(data.country).should('have.value', data.country);
+
+            home.cityTxtbox.type(data.city).should('have.value', data.city);
+
+            home.usernameTxtbox.type(data.username).should('have.value', data.username);
+
+            home.passwordTxtbox.type(data.password).should('have.value', data.password);
+
         })
 
         //Act
